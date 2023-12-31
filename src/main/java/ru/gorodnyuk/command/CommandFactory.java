@@ -6,7 +6,7 @@ public class CommandFactory {
         return new CommandExecutor();
     }
 
-    public static CommandValidator getCommandValidator() {
-        return new CommandValidator();
+    public static CommandProcessor getCommandProcessor() {
+        return new CommandProcessor(getCommandExecutor());
     }
 }
