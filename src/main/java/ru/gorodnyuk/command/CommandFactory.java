@@ -6,6 +6,10 @@ public class CommandFactory {
         return new CommandExecutor();
     }
 
+    public static CommandParser getCommandParser() {
+        return new CommandParser();
+    }
+
     public static CommandProcessor getCommandProcessor() {
         return new CommandProcessor(getCommandExecutor());
     }
