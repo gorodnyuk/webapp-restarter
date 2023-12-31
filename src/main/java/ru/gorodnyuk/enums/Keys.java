@@ -1,6 +1,7 @@
 package ru.gorodnyuk.enums;
 
 public enum Keys {
+    START_DELAY("-d"),
     TIME("-t"),
     COMMAND("-c");
 
