@@ -9,7 +9,9 @@ public class Main {
 
     public static void main(String[] args) {
         // todo add help
-        CommandValidator.validate(args);
+        CommandValidator commandValidator = CommandFactory.getCommandValidator();
+        commandValidator.validate(args);
+
         CommandProcessor commandProcessor = CommandFactory.getCommandProcessor();
         CommandParser commandParser = CommandFactory.getCommandParser();
         commandProcessor.process(commandParser.parse(args));

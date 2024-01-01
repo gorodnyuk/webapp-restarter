@@ -13,4 +13,8 @@ public class CommandFactory {
     public static CommandProcessor getCommandProcessor() {
         return new CommandProcessor(getCommandExecutor());
     }
+
+    public static CommandValidator getCommandValidator() {
+        return new CommandValidator(getCommandParser());
+    }
 }

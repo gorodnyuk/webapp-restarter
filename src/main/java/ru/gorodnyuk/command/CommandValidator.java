@@ -1,48 +1,78 @@
 package ru.gorodnyuk.command;
 
 import org.apache.commons.collections4.CollectionUtils;
+import org.apache.commons.lang3.StringUtils;
 import ru.gorodnyuk.enums.Keys;
 
 import java.util.Arrays;
 import java.util.List;
+import java.util.Map;
 import java.util.stream.Collectors;
 
 public class CommandValidator {
 
-    public static void validate(String[] args) {
+    private final CommandParser commandParser;
 
-        //todo обязательно нужна команда
-        if (args.length == 0) {
-            throw new IllegalArgumentException("At least one command key and one command value must be specified");
+    public CommandValidator(CommandParser commandParser) {
+        this.commandParser = commandParser;
+    }
+
+    public void validate(String[] args) {
+        checkEmptyArgs(args);
+        checkUnknownCommands(args);
+        checkRequiredCommands(args);
+        checkMatchCommandsAndValues(args);
+    }
+
+    private void checkMatchCommandsAndValues(String[] args) {
+        if (getKeyCount(args) != getValueCount(args)) {
+            throw new IllegalArgumentException("Amount command key and command value must be match");
         }
+    }
 
+    private void checkRequiredCommands(String[] args) {
+        Map<String, String> availableCommands = commandParser.parse(args);
+        String cCommand = availableCommands.get(Keys.COMMAND.getKey());
+        if (StringUtils.isEmpty(cCommand)) {
+            throw new IllegalArgumentException("'-c' command keys with their value must be specified");
+        }
+        String pCommand = availableCommands.get(Keys.PORT.getKey());
+        if (StringUtils.isEmpty(pCommand)) {
+            throw new IllegalArgumentException("'-p' command keys with their value must be specified");
+        }
+    }
+
+    private void checkUnknownCommands(String[] args) {
         List<String> unknownCommands = getUnknownCommands(args);
         if (CollectionUtils.isNotEmpty(unknownCommands)) {
             throw new IllegalArgumentException(String.format(
                     "There are unknown commands: %s", String.join(", ", unknownCommands))
             );
         }
+    }
 
-        if (getKeyCount(args) != getValueCount(args)) {
-            throw new IllegalArgumentException("Amount command key and command value must be match");
+    private static void checkEmptyArgs(String[] args) {
+        if (args.length == 0) {
+            throw new IllegalArgumentException("At least one '-p' and one '-c' command keys with their values must be specified");
         }
     }
 
-    private static long getKeyCount(String[] args) {
+    private long getKeyCount(String[] args) {
         return getCommands(args).size();
     }
 
-    private static long getValueCount(String[] args) {
+    private long getValueCount(String[] args) {
         return Arrays.stream(args)
                 .filter(f -> !f.startsWith("-"))
                 .count();
     }
 
-    private static List<String> getUnknownCommands(String[] args) {
+    private List<String> getUnknownCommands(String[] args) {
         return getCommands(args).stream()
                 .filter(command -> !command.equals(Keys.START_DELAY.getKey())
                         && !command.equals(Keys.COMMAND.getKey())
-                        && !command.equals(Keys.TIMEOUT.getKey()))
+                        && !command.equals(Keys.TIMEOUT.getKey())
+                        && !command.equals(Keys.PORT.getKey()))
                 .collect(Collectors.toList());
     }
 
