@@ -6,8 +6,8 @@ import java.util.Map;
 
 public class CommandProcessor {
 
-    private static int DEFAULT_START_DELAY_SECONDS = 10;
-    private static int DEFAULT_TIMEOUT_MINUTES = 60;
+    private static final int DEFAULT_START_DELAY_SECONDS = 60;
+    private static final int DEFAULT_EXECUTION_TIMEOUT_SECONDS = 3600;
 
     private final CommandExecutor commandExecutor;
 
@@ -16,17 +16,17 @@ public class CommandProcessor {
     }
 
     public void process(Map<String, String> commandsMap) {
-        long executionTimeout = getExecutionTimeout(commandsMap.get("-t"));
+        long startTimeout = getExecutionTime(commandsMap.get("-d"), DEFAULT_START_DELAY_SECONDS);
+        long executionTimeout = getExecutionTime(commandsMap.get("-t"), DEFAULT_EXECUTION_TIMEOUT_SECONDS);
         while (true) {
 //            TimeUnit.SECONDS.sleep(5); // поменять на с задержкой ExecutorService или Scheduler
         }
     }
 
-    private long getExecutionTimeout(String strTime) {
-        long startDelay = DEFAULT_START_DELAY_SECONDS;
+    private long getExecutionTime(String strTime, long time) {
         if (!StringUtils.isEmpty(strTime)) {
-            startDelay = Long.parseLong(strTime);
+            time = Long.parseLong(strTime);
         }
-        return startDelay;
+        return time;
     }
 }
