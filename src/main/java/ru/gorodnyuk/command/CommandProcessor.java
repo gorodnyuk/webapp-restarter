@@ -29,4 +29,8 @@ public class CommandProcessor {
         }
         return time;
     }
+
+    private void executeCommand(String command) {
+        // System start process...
+    }
 }
