@@ -1,19 +1,25 @@
 package ru.gorodnyuk;
 
-import ru.gorodnyuk.command.CommandFactory;
-import ru.gorodnyuk.command.CommandParser;
-import ru.gorodnyuk.command.CommandProcessor;
-import ru.gorodnyuk.command.CommandValidator;
+import org.springframework.boot.CommandLineRunner;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
 
-public class Main {
+@SpringBootApplication
+public class Main implements CommandLineRunner {
 
     public static void main(String[] args) {
         // todo add help
-        CommandValidator commandValidator = CommandFactory.getCommandValidator();
-        commandValidator.validate(args);
+        SpringApplication.run(Main.class, args);
+//        CommandValidator commandValidator = CommandFactory.getCommandValidator();
+//        commandValidator.validate(args);
+//
+//        CommandProcessor commandProcessor = CommandFactory.getCommandProcessor();
+//        CommandParser commandParser = CommandFactory.getCommandParser();
+//        commandProcessor.process(commandParser.parse(args));
+    }
 
-        CommandProcessor commandProcessor = CommandFactory.getCommandProcessor();
-        CommandParser commandParser = CommandFactory.getCommandParser();
-        commandProcessor.process(commandParser.parse(args));
+    @Override
+    public void run(String... args) throws Exception {
+        System.out.println("asdasdasdad");
     }
 }

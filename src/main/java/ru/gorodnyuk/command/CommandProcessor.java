@@ -1,12 +1,14 @@
 package ru.gorodnyuk.command;
 
-import org.apache.commons.lang3.StringUtils;
+import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 import ru.gorodnyuk.enums.Keys;
 import ru.gorodnyuk.utils.PortUtils;
 
 import java.io.IOException;
 import java.util.Map;
 
+@Component
 public class CommandProcessor {
 
     private static final int DEFAULT_START_DELAY_SECONDS = 60;
@@ -14,7 +16,7 @@ public class CommandProcessor {
 
     public void process(Map<String, String> commandsMap) {
         String helpKey = commandsMap.get(Keys.HELP.getKey());
-        if (!StringUtils.isEmpty(helpKey)) {
+        if (StringUtils.hasText(helpKey)) {
             // выдать помощь
             return;
         }

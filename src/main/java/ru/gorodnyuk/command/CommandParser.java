@@ -1,8 +1,11 @@
 package ru.gorodnyuk.command;
 
+import org.springframework.stereotype.Component;
+
 import java.util.HashMap;
 import java.util.Map;
 
+@Component
 public class CommandParser {
 
     public Map<String, String> parse(String[] args) {
