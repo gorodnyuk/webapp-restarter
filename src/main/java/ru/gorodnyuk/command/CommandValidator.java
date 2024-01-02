@@ -18,6 +18,11 @@ public class CommandValidator {
     private final CommandParser commandParser;
 
     public void validate(String[] args) {
+        List<String> commands = getCommands(args);
+        if (!CollectionUtils.isEmpty(commands)
+                && commands.stream().anyMatch(helpKey -> helpKey.equals(Keys.HELP.getKey()))) {
+            return;
+        }
         checkEmptyArgs(args);
         checkUnknownCommands(args);
         checkRequiredCommands(args);
@@ -25,7 +30,6 @@ public class CommandValidator {
     }
 
     private void checkMatchCommandsAndValues(String[] args) {
-        // todo пропуск команды -h (HELP)
         if (getKeyCount(args) != getValueCount(args)) {
             throw new IllegalArgumentException("Amount command key and command value must be match");
         }

@@ -20,7 +20,6 @@ public class Main implements CommandLineRunner {
 
     @Override
     public void run(String... args) {
-        // todo add help
         commandProcessor.process(argumentExtractor.extract(args));
     }
 }

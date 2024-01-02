@@ -2,6 +2,7 @@ package ru.gorodnyuk.command;
 
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
+import org.springframework.util.StringUtils;
 
 import java.util.Map;
 import java.util.Optional;
@@ -19,14 +20,22 @@ public class ArgumentExtractor {
     }
 
     public Optional<String> getString(Map<String, String> kvArgs, String key) {
-        return Optional.of(kvArgs.get(key));
+        return Optional.ofNullable(kvArgs.get(key));
     }
 
     public Optional<Long> getLong(Map<String, String> kvArgs, String key) {
-        return Optional.of(Long.parseLong(kvArgs.get(key)));
+        String value = kvArgs.get(key);
+        if (StringUtils.hasText(value)) {
+            return Optional.of(Long.parseLong(kvArgs.get(key)));
+        }
+        return Optional.empty();
     }
 
     public Optional<Integer> getInteger(Map<String, String> kvArgs, String key) {
-        return Optional.of(Integer.parseInt(kvArgs.get(key)));
+        String value = kvArgs.get(key);
+        if (StringUtils.hasText(value)) {
+            return Optional.of(Integer.parseInt(kvArgs.get(key)));
+        }
+        return Optional.empty();
     }
 }

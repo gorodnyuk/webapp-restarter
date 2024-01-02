@@ -27,8 +27,10 @@ public class CommandProcessor {
 
         long startDelay = argumentExtractor.getLong(commandsMap, Keys.START_DELAY.getKey()).orElse(DEFAULT_START_DELAY_SECONDS);
         long executionTimeout = argumentExtractor.getLong(commandsMap, Keys.TIMEOUT.getKey()).orElse(DEFAULT_EXECUTION_TIMEOUT_SECONDS);
-        int port = argumentExtractor.getInteger(commandsMap, Keys.PORT.getKey()).orElseThrow(() -> new RuntimeException("Unexpected exception when extract port"));
-        String command = commandsMap.get(Keys.COMMAND.getKey());
+        int port = argumentExtractor.getInteger(commandsMap, Keys.PORT.getKey())
+                .orElseThrow(() -> new RuntimeException("Unexpected exception when extract port. Port must be present!"));
+        String command = argumentExtractor.getString(commandsMap, Keys.COMMAND.getKey())
+                .orElseThrow(() -> new RuntimeException("Unexpected exception when extract command. Command must be present!"));
 
         while (true) {
 //            TimeUnit.SECONDS.sleep(5); // поменять на с задержкой ExecutorService или Scheduler
