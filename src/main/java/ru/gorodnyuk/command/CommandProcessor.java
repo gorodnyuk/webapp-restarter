@@ -1,29 +1,33 @@
 package ru.gorodnyuk.command;
 
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
-import org.springframework.util.StringUtils;
 import ru.gorodnyuk.enums.Keys;
 import ru.gorodnyuk.utils.PortUtils;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.Optional;
 
 @Component
+@RequiredArgsConstructor
 public class CommandProcessor {
 
-    private static final int DEFAULT_START_DELAY_SECONDS = 60;
-    private static final int DEFAULT_EXECUTION_TIMEOUT_SECONDS = 3600;
+    private static final long DEFAULT_START_DELAY_SECONDS = 60;
+    private static final long DEFAULT_EXECUTION_TIMEOUT_SECONDS = 3600;
+
+    private final ArgumentExtractor argumentExtractor;
 
     public void process(Map<String, String> commandsMap) {
-        String helpKey = commandsMap.get(Keys.HELP.getKey());
-        if (StringUtils.hasText(helpKey)) {
+        Optional<String> maybeHelpKey = argumentExtractor.getString(commandsMap, Keys.HELP.getKey());
+        if (maybeHelpKey.isPresent()) {
             // выдать помощь
             return;
         }
 
-        long startDelay = getExecutionTime(commandsMap.get(Keys.START_DELAY.getKey()), DEFAULT_START_DELAY_SECONDS);
-        long executionTimeout = getExecutionTime(commandsMap.get(Keys.TIMEOUT.getKey()), DEFAULT_EXECUTION_TIMEOUT_SECONDS);
-        int port = Integer.parseInt(commandsMap.get(Keys.PORT.getKey()));
+        long startDelay = argumentExtractor.getLong(commandsMap, Keys.START_DELAY.getKey()).orElse(DEFAULT_START_DELAY_SECONDS);
+        long executionTimeout = argumentExtractor.getLong(commandsMap, Keys.TIMEOUT.getKey()).orElse(DEFAULT_EXECUTION_TIMEOUT_SECONDS);
+        int port = argumentExtractor.getInteger(commandsMap, Keys.PORT.getKey()).orElseThrow(() -> new RuntimeException("Unexpected exception when extract port"));
         String command = commandsMap.get(Keys.COMMAND.getKey());
 
         while (true) {
@@ -32,13 +36,6 @@ public class CommandProcessor {
                 executeCommand(command);
             }
         }
-    }
-
-    private long getExecutionTime(String strTime, long timeout) {
-        if (!StringUtils.isEmpty(strTime)) {
-            timeout = Long.parseLong(strTime);
-        }
-        return timeout;
     }
 
     private void executeCommand(String command) {

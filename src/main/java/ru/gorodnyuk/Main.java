@@ -4,17 +4,15 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import ru.gorodnyuk.command.CommandParser;
+import ru.gorodnyuk.command.ArgumentExtractor;
 import ru.gorodnyuk.command.CommandProcessor;
-import ru.gorodnyuk.command.CommandValidator;
 
 @SpringBootApplication
 @RequiredArgsConstructor
 public class Main implements CommandLineRunner {
 
-    private final CommandValidator commandValidator;
     private final CommandProcessor commandProcessor;
-    private final CommandParser commandParser;
+    private final ArgumentExtractor argumentExtractor;
 
     public static void main(String[] args) {
         SpringApplication.run(Main.class, args);
@@ -23,7 +21,6 @@ public class Main implements CommandLineRunner {
     @Override
     public void run(String... args) {
         // todo add help
-        commandValidator.validate(args);
-        commandProcessor.process(commandParser.parse(args));
+        commandProcessor.process(argumentExtractor.extract(args));
     }
 }
