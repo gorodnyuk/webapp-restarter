@@ -11,7 +11,8 @@ public enum Keys {
     START_DELAY("-d"),
     TIMEOUT("-t"),
     COMMAND("-c"),
-    PORT("-p");
+    PORT("-p"),
+    HELP("-h");
 
     private String key;
 

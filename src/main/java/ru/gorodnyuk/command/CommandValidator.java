@@ -25,6 +25,7 @@ public class CommandValidator {
     }
 
     private void checkMatchCommandsAndValues(String[] args) {
+        // todo пропуск команды -h (HELP)
         if (getKeyCount(args) != getValueCount(args)) {
             throw new IllegalArgumentException("Amount command key and command value must be match");
         }
@@ -33,12 +34,13 @@ public class CommandValidator {
     private void checkRequiredCommands(String[] args) {
         Map<String, String> availableCommands = commandParser.parse(args);
         String cCommand = availableCommands.get(Keys.COMMAND.getKey());
+        String errorMessage = "'%s' command keys with their value must be specified";
         if (StringUtils.isEmpty(cCommand)) {
-            throw new IllegalArgumentException("'-c' command keys with their value must be specified");
+            throw new IllegalArgumentException(errorMessage.formatted("-c"));
         }
         String pCommand = availableCommands.get(Keys.PORT.getKey());
         if (StringUtils.isEmpty(pCommand)) {
-            throw new IllegalArgumentException("'-p' command keys with their value must be specified");
+            throw new IllegalArgumentException(errorMessage.formatted("-p"));
         }
     }
 
